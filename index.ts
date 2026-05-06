@@ -1,4 +1,3 @@
-import cron from "node-cron";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -62,11 +61,4 @@ async function fetchKapAndEmail() {
   }
 }
 
-// Every day at 8:00 AM (server local time)
-cron.schedule("0 5 * * *", fetchKapAndEmail, {
-  timezone: "Europe/Istanbul",
-});
-
-console.log("KAP cron job running. Waiting for 8 AM...");
-
-// fetchKapAndEmail(); // Uncomment to test immediately
+await fetchKapAndEmail();

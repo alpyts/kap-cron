@@ -95,7 +95,9 @@ bun install
 bun run index.ts
 ```
 
-The cron is scheduled at `0 5 * * *` (Europe/Istanbul). Uncomment the trailing `fetchKapAndEmail()` call in `index.ts` to test immediately.
+`index.ts` runs `fetchKapAndEmail()` once and exits. Scheduling is handled by GitHub Actions (see `.github/workflows/kap.yml`), which runs the script daily at `0 5 * * *` UTC (08:00 Europe/Istanbul) and is also triggerable manually via `workflow_dispatch`.
+
+Configure these repository secrets for the workflow: `RESEND_API_KEY`, `FROM_EMAIL`, `TO_EMAIL`.
 
 ## Run with Docker Compose
 
