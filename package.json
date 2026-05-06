@@ -1,0 +1,16 @@
+{
+  "name": "kap-cron",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "node-cron": "^4.2.1",
+    "resend": "^6.12.3"
+  }
+}
