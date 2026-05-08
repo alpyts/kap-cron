@@ -2,10 +2,34 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+interface KapDisclosure {
+  publishDate: string | null;
+  fundCode: string | null;
+  kapTitle: string | null;
+  isOldKap: boolean;
+  disclosureClass: string;
+  disclosureType: string;
+  disclosureCategory: string;
+  summary: string | null;
+  subject: string | null;
+  relatedStocks: string | null;
+  year: number | null;
+  ruleType: string;
+  period: string | null;
+  disclosureIndex: number;
+  isLate: boolean;
+  stockCodes: string | null;
+  hasMultiLanguageSupport: boolean;
+  attachmentCount: number;
+  modifyStatus: string | null;
+}
+
+type KapResponse = KapDisclosure[] | { data?: KapDisclosure[] };
+
 async function fetchKapAndEmail() {
   try {
     const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date(Date.now() - 86400000)
+    const yesterday = new Date(Date.now() - 5 * 86400000)
       .toISOString()
       .slice(0, 10);
 
@@ -14,7 +38,8 @@ async function fetchKapAndEmail() {
       {
         method: "POST",
         headers: {
-          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+          "User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -26,23 +51,39 @@ async function fetchKapAndEmail() {
       }
     );
 
-    const data = await res.json();
-    const items = Array.isArray(data) ? data : data?.data ?? [];
+    const data = (await res.json()) as KapResponse;
+    const items: KapDisclosure[] = Array.isArray(data) ? data : data.data ?? [];
 
     const html = items.length
       ? `<ul>${items
-          .map(
-            (d: any) => `
+          .map((d) => {
+            const url = d.disclosureIndex
+              ? `https://kap.org.tr/tr/Bildirim/${d.disclosureIndex}`
+              : null;
+            const count = Number(d.attachmentCount ?? 0);
+            const badge =
+              count > 0
+                ? `<span style="display:inline-block;background:#fff3b0;color:#5a4500;padding:2px 8px;margin-left:6px;border-radius:10px;font-size:12px;font-weight:bold;border:1px solid #e6c84a;">📎 ${count} ek</span>`
+                : `<span style="display:inline-block;background:#eee;color:#777;padding:2px 8px;margin-left:6px;border-radius:10px;font-size:12px;">📎 0</span>`;
+            const titleHtml = url
+              ? `<a href="${url}" style="color:#0a66c2;text-decoration:none;"><b>${
+                  d.kapTitle ?? "—"
+                }</b></a>`
+              : `<b>${d.kapTitle ?? "—"}</b>`;
+            const idHtml = url
+              ? `<a href="${url}" style="color:#0a66c2;">${d.disclosureIndex}</a>`
+              : d.disclosureIndex ?? "—";
+            return `
       <li>
-        <b>${d.kapTitle ?? "—"}</b><br/>
+        ${titleHtml}${badge}<br/>
         <b>Konu:</b> ${d.subject ?? "—"}<br/>
         <b>Özet:</b> ${d.summary ?? "—"}<br/>
         <b>Hisse:</b> ${d.stockCodes ?? "—"}<br/>
         <b>Tarih:</b> ${d.publishDate ?? "—"}<br/>
-        <b>Bildirim No:</b> ${d.disclosureIndex ?? "—"}
+        <b>Bildirim No:</b> ${idHtml}
       </li><hr/>
-    `
-          )
+    `;
+          })
           .join("")}</ul>`
       : "<p>Bugün yeni bildirim bulunamadı.</p>";
 
@@ -62,4 +103,7 @@ async function fetchKapAndEmail() {
   }
 }
 
-await fetchKapAndEmail();
+fetchKapAndEmail().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
