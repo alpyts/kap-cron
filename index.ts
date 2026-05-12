@@ -29,7 +29,7 @@ type KapResponse = KapDisclosure[] | { data?: KapDisclosure[] };
 async function fetchKapAndEmail() {
   try {
     const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date(Date.now() - 5 * 86400000)
+    const yesterday = new Date(Date.now() - 86400000)
       .toISOString()
       .slice(0, 10);
 
