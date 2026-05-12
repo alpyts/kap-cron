@@ -1,3 +1,5 @@
+*** https://github.com/batuhan-elibuyuk/kap-cron/settings/secrets/actions to change secrets ***
+
 # kap-cron
 
 A scheduled job that fetches daily disclosures from KAP (Kamuyu Aydınlatma Platformu) and emails a digest via Resend.
