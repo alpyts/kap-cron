@@ -29,7 +29,7 @@ type KapResponse = KapDisclosure[] | { data?: KapDisclosure[] };
 async function fetchKapAndEmail() {
   try {
     const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date(Date.now() - 86400000)
+    const yesterday = new Date(Date.now() - 7 * 86400000)
       .toISOString()
       .slice(0, 10);
 
@@ -89,13 +89,13 @@ async function fetchKapAndEmail() {
     `;
           })
           .join("")}</ul>`
-      : "<p>Bugün yeni bildirim bulunamadı.</p>";
+      : "<p>Son 7 günde yeni MDV bildirim bulunamadı.</p>";
 
     const result = await resend.emails.send({
       from: process.env.FROM_EMAIL!,
       to: process.env.TO_EMAIL!,
-      subject: `KAP Bildirimleri — ${today}`,
-      html: `<h2>KAP IGS Bildirimleri</h2><p>Tarih: ${today}</p>${html}`,
+      subject: `KAP Bildirimleri — ${yesterday} / ${today}`,
+      html: `<h2>KAP Bildirimleri</h2><p>Tarih: ${today}</p>${html}`,
     });
     console.log(result, "res of mail send");
 
