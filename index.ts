@@ -46,7 +46,11 @@ async function fetchKapAndEmail() {
           fromDate: yesterday,
           toDate: today,
           memberType: "IGS",
-          subjectList: ["8aca490d513475640151347f817d0064"],
+          subjectList: [
+  "8aca490d513475640151347f817d0064",  // MDV Alımı
+  "8aca490d513475640151348064c3006e",  // MDV Satımı
+  "8aca490d513475640151348149780081",  // MDV Kiraya Verilmesi
+],
         }),
       }
     );
