@@ -46,11 +46,29 @@ async function fetchKapAndEmail() {
           fromDate: yesterday,
           toDate: today,
           memberType: "IGS",
+          mkkMemberOidList: [],
+          inactiveMkkMemberOidList: [],
+          disclosureClass: "ODA",
           subjectList: [
-  "8aca490d513475640151347f817d0064",  // MDV Alımı
-  "8aca490d513475640151348064c3006e",  // MDV Satımı
-  "8aca490d513475640151348149780081",  // MDV Kiraya Verilmesi
-],
+            "8aca490d513475640151347f817d0064",
+            "8aca490d513475640151348064c3006e",
+            "8aca490d513475640151348149780081",
+          ],
+          isLate: "",
+          mainSector: "",
+          sector: "",
+          subSector: "",
+          marketOid: "",
+          index: "",
+          bdkReview: "",
+          bdkMemberOidList: [],
+          year: "",
+          term: "",
+          ruleType: "",
+          period: "",
+          fromSrc: false,
+          srcCategory: "",
+          disclosureIndexList: [],
         }),
       }
     );
@@ -95,7 +113,7 @@ async function fetchKapAndEmail() {
       from: process.env.FROM_EMAIL!,
       to: process.env.TO_EMAIL!,
       subject: `KAP Bildirimleri — ${yesterday} / ${today}`,
-      html: `<h2>KAP Bildirimleri</h2><p>Tarih: ${today}</p>${html}`,
+      html: `<h2>KAP IGS Bildirimleri</h2><p>Tarih: ${today}</p>${html}`,
     });
     console.log(result, "res of mail send");
 
