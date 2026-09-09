@@ -3,7 +3,7 @@ name: KAP Daily Fetch
 
 on:
   schedule:
-    - cron: "0 10 * * *"  # 10am Istanbul
+    - cron: "10 7 * * *"  # +3h Istanbul
 
   workflow_dispatch:  # manual trigger too
 
