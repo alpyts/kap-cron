@@ -3,7 +3,7 @@ name: KAP Daily Fetch
 
 on:
   schedule:
-    - cron: "10 7 * * *"  # +3h Istanbul
+    - cron: "* /5 * * * *"  # +3h Istanbul
 
   workflow_dispatch:  # manual trigger too
 
@@ -11,6 +11,13 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
+    - name: schedule diagnostics
+    - run: 
+            echo: "Event name: ${{ github.event_name }}"
+            echo: "Schedule: ${{ github.event.schedule }}"
+            echo: "UTC time: ${{ date -u }}"
+            echo: "Istanbul time: $(TZ=Europe/Istanbul date)"
+
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install
