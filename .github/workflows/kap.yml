@@ -3,7 +3,8 @@ name: KAP Daily Fetch
 
 on:
   schedule:
-    - cron: "30 5 * * *"  # 8am Istanbul
+    - cron: "0 10 * * *"  # 10am Istanbul
+
   workflow_dispatch:  # manual trigger too
 
 jobs:
